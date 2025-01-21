@@ -1,35 +1,52 @@
-import axios from "axios";
 import React from "react";
+import { usePostContactMutation } from "../createApi/mockUserApi";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setEmail,
+  setFullName,
+  setMessage,
+  resetForm,
+} from "../createSlice/contactFormSlice";
 
 const Scroll = () => {
-  const data = { fullName: "", email: "", message: "" };
-  const [input, setInput] = React.useState(data);
-  // destructure input here
-  //   const { fullName, email, message } = input;
-  //handle submit
+  const [sendData, { isLoading, error }] = usePostContactMutation();
+  const dispatch = useDispatch();
+  const { fullName, email, message } = useSelector(
+    (state) => state.contactForm
+  );
+  console.log(fullName, email, message);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const trimmedInput = {
+      fullName: fullName?.trim(),
+      email: email?.trim(),
+      message: message?.trim(),
+    };
+
+    // Input validation
+    if (
+      !trimmedInput.fullName ||
+      !trimmedInput.email ||
+      !trimmedInput.message
+    ) {
+      alert("Please fill all input fields.");
+      return;
+    }
+
+    if (trimmedInput.message.length > 200) {
+      alert("Message should not be longer than 200 characters.");
+      return;
+    }
+
     try {
-      const trimmedInput = {
-        fullName: input.fullName?.trim(),
-        email: input.email?.trim(),
-        message: input.message?.trim(),
-      };
-      if (
-        trimmedInput.fullName !== "" &&
-        trimmedInput.email !== "" &&
-        trimmedInput.message !== ""
-      ) {
-        const res = await axios.post(
-          "https://66d7d89d37b1cadd80527051.mockapi.io/api/v1/users",
-          trimmedInput
-        );
-        alert("Submitted successfully");
-      } else {
-        alert("please fill all input field thank you.. ");
-      }
+      // Dispatch data to Redux and send it through RTK mutation
+      await sendData(trimmedInput).unwrap();
+
+      alert("Submitted successfully");
+      dispatch(resetForm());
     } catch (error) {
-      console.log(error);
+      console.error("Error during submission:", error);
+      alert("Something went wrong, please try again.");
     }
   };
 
@@ -43,29 +60,26 @@ const Scroll = () => {
         >
           <div className="w-full flex flex-col gap-4">
             <input
-              value={input.fullName}
+              value={fullName}
               onChange={(e) =>
-                setInput((prev) => ({ ...prev, fullName: e.target.value }))
+                // setInput((prev) => ({ ...prev, fullName: e.target.value }))
+                dispatch(setFullName(e.target.value))
               }
               type="text"
               placeholder="Your Name"
-              className="p-2 w-full  shadow-lg max-w-xs mx-auto border border-gray-300 rounded-md"
+              className="p-2 w-full shadow-lg max-w-xs mx-auto border border-gray-300 rounded-md"
             />
             <input
-              value={input.email}
-              onChange={(e) =>
-                setInput((prev) => ({ ...prev, email: e.target.value }))
-              }
+              value={email}
+              onChange={(e) => dispatch(setEmail(e.target.value))}
               type="email"
               placeholder="Your Email"
               className="p-2 w-full shadow-lg max-w-xs mx-auto border border-gray-300 rounded-md"
             />
           </div>
           <textarea
-            value={input.message}
-            onChange={(e) =>
-              setInput((prev) => ({ ...prev, message: e.target.value }))
-            }
+            value={message}
+            onChange={(e) => dispatch(setMessage(e.target.value))}
             placeholder="Your Message"
             className="p-2 w-full shadow-lg max-w-md mx-auto border border-gray-300 rounded-md"
             rows="4"
@@ -73,10 +87,16 @@ const Scroll = () => {
           <button
             type="submit"
             className="bg-black text-white py-2 px-6 rounded-md"
+            disabled={isLoading} // Disable the button while loading
           >
-            Submit
+            {isLoading ? "Submitting..." : "Submit"}
           </button>
         </form>
+        {error && (
+          <p className="text-red-500 mt-4">
+            Submission failed. Please try again.
+          </p>
+        )}
       </div>
     </section>
   );

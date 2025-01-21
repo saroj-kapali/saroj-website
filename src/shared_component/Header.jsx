@@ -23,24 +23,36 @@ const Header = () => {
           </div>
         </div>
         {/* Desktop menu */}
-        <ul className="sm:flex hidden space-x-6">
+        <ul className="sm:flex hidden font-mono space-x-6">
           <li>
-            <NavLink to={"/"} className=" hover:text-gray-400">
+            <NavLink
+              to={"/"}
+              className={({ isActive }) => `${isActive && "underline"}`}
+            >
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to={"/about"} className=" hover:text-gray-400">
+            <NavLink
+              className={({ isActive }) => `${isActive && "underline"}`}
+              to={"/about"}
+            >
               About
             </NavLink>
           </li>
           <li>
-            <NavLink to={"/service"} className=" hover:text-gray-400">
+            <NavLink
+              to={"/service"}
+              className={({ isActive }) => `${isActive && "underline"}`}
+            >
               Services
             </NavLink>
           </li>
           <li>
-            <NavLink to={"/contact"} className=" hover:text-gray-400">
+            <NavLink
+              to={"/contact"}
+              className={({ isActive }) => `${isActive && "underline"}`}
+            >
               Contact
             </NavLink>
           </li>

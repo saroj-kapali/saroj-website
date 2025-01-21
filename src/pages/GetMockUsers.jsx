@@ -51,7 +51,7 @@ const GetMockUsers = () => {
       )}
 
       <h2 className="text-center font-bold">User Lists</h2>
-      <div className="max-h-screen  mx-auto w-full bg-white  shadow-xl px-4">
+      <div className="max-h-screen  mx-auto w-full   shadow-xl px-4">
         <div className="flex mx-auto flex-col gap-4 py-4 justify-center items-center">
           {data?.map((user) => (
             <ul

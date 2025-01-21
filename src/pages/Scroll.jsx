@@ -22,7 +22,7 @@ const Scroll = () => {
 
   const dispatch = useDispatch();
   const { refetch } = useGetMockUsersQuery();
-  const { messageFrom, input } = useSelector((state) => state.contactForm);
+  const { input } = useSelector((state) => state.contactForm);
   const { fullName, email, message } = input;
 
   const handleSubmit = async (e) => {
@@ -44,7 +44,7 @@ const Scroll = () => {
     }
 
     if (trimmedInput.message.length > 500) {
-      alert("Message should not be longer than 200 characters.");
+      alert("Message should not be longer than 500 characters.");
       return;
     }
 
@@ -57,59 +57,60 @@ const Scroll = () => {
       }
 
       dispatch(resetForm());
-
       refetch();
-      // alert("Submitted successfully");
+      alert("Submitted successfully");
     } catch (error) {
       console.error("Error during submission:", error);
       alert("Something went wrong, please try again.");
     }
   };
 
-  // handleUpdate
-
-  const handleUpdate = () => {};
-
   return (
-    <section id="contact" className="py-20 bg-gray-200">
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl font-semibold mb-6">Contact Us</h2>
+    <section
+      id="contact"
+      className="py-20 bg-gradient-to-b from-blue-50 to-gray-100"
+    >
+      <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 className="text-4xl font-extrabold text-gray-800 mb-8">
+          Get in Touch
+        </h2>
+        <p className="text-lg text-gray-600 mb-12">
+          Have questions or need help? Fill out the form below and we’ll get
+          back to you as soon as possible!
+        </p>
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 flex flex-col justify-center items-center"
+          className="space-y-6 bg-white shadow-lg rounded-lg p-8 max-w-lg mx-auto"
         >
-          <div className="w-full flex flex-col gap-4">
+          <div className="flex flex-col space-y-4">
             <input
               value={fullName}
-              onChange={(e) =>
-                // setInput((prev) => ({ ...prev, fullName: e.target.value }))
-                dispatch(setFullName(e.target.value))
-              }
+              onChange={(e) => dispatch(setFullName(e.target.value))}
               type="text"
               placeholder="Your Name"
-              className="p-2 w-full shadow-lg max-w-xs mx-auto border border-gray-300 rounded-md"
+              className="p-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 w-full"
             />
             <input
               value={email}
               onChange={(e) => dispatch(setEmail(e.target.value))}
-              type="text"
+              type="email"
               placeholder="Your Email"
-              className="p-2 w-full shadow-lg max-w-xs mx-auto border border-gray-300 rounded-md"
+              className="p-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 w-full"
             />
           </div>
           <textarea
             value={message}
             onChange={(e) => dispatch(setMessage(e.target.value))}
             placeholder="Your Message"
-            className="p-2 w-full shadow-lg max-w-md mx-auto border border-gray-300 rounded-md"
-            rows="4"
+            className="p-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 w-full"
+            rows="5"
           ></textarea>
           <button
             type="submit"
-            className="bg-black text-white py-2 px-6 rounded-md"
-            disabled={isLoading} // Disable the button while loading
+            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+            disabled={isLoading}
           >
-            {updatedUsers ? "Update" : "Submit"}
+            {isLoading ? "Submitting..." : updatedUsers ? "Update" : "Submit"}
           </button>
         </form>
         {error && (

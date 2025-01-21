@@ -7,18 +7,28 @@ import {
   setMessage,
   resetForm,
 } from "../createSlice/contactFormSlice";
+import GetMockUsers from "./GetMockUsers";
+import {
+  useGetMockUsersQuery,
+  useUpdateMockUsersMutation,
+} from "../createApi/getMockUserApi";
 
 const Scroll = () => {
   const [sendData, { isLoading, error }] = usePostContactMutation();
-  const dispatch = useDispatch();
-  const { fullName, email, message } = useSelector(
+  const [updateUser] = useUpdateMockUsersMutation();
+  const { updateUser: updatedUsers } = useSelector(
     (state) => state.contactForm
   );
-  console.log(fullName, email, message);
+
+  const dispatch = useDispatch();
+  const { refetch } = useGetMockUsersQuery();
+  const { messageFrom, input } = useSelector((state) => state.contactForm);
+  const { fullName, email, message } = input;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const trimmedInput = {
-      fullName: fullName?.trim(),
+      fullName: fullName?.trim().toUpperCase(),
       email: email?.trim(),
       message: message?.trim(),
     };
@@ -33,22 +43,32 @@ const Scroll = () => {
       return;
     }
 
-    if (trimmedInput.message.length > 200) {
+    if (trimmedInput.message.length > 500) {
       alert("Message should not be longer than 200 characters.");
       return;
     }
 
     try {
-      // Dispatch data to Redux and send it through RTK mutation
-      await sendData(trimmedInput).unwrap();
+      if (updatedUsers) {
+        await updateUser({ id: updatedUsers.id, ...trimmedInput }).unwrap();
+      } else {
+        // Dispatch data to Redux and send it through RTK mutation
+        await sendData(trimmedInput).unwrap();
+      }
 
-      alert("Submitted successfully");
       dispatch(resetForm());
+
+      refetch();
+      // alert("Submitted successfully");
     } catch (error) {
       console.error("Error during submission:", error);
       alert("Something went wrong, please try again.");
     }
   };
+
+  // handleUpdate
+
+  const handleUpdate = () => {};
 
   return (
     <section id="contact" className="py-20 bg-gray-200">
@@ -72,7 +92,7 @@ const Scroll = () => {
             <input
               value={email}
               onChange={(e) => dispatch(setEmail(e.target.value))}
-              type="email"
+              type="text"
               placeholder="Your Email"
               className="p-2 w-full shadow-lg max-w-xs mx-auto border border-gray-300 rounded-md"
             />
@@ -89,7 +109,7 @@ const Scroll = () => {
             className="bg-black text-white py-2 px-6 rounded-md"
             disabled={isLoading} // Disable the button while loading
           >
-            {isLoading ? "Submitting..." : "Submit"}
+            {updatedUsers ? "Update" : "Submit"}
           </button>
         </form>
         {error && (
@@ -98,6 +118,7 @@ const Scroll = () => {
           </p>
         )}
       </div>
+      <GetMockUsers />
     </section>
   );
 };

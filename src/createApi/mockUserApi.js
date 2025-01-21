@@ -7,14 +7,11 @@ export const mockUserApi = createApi({
   }),
   endpoints: (builder) => ({
     postContact: builder.mutation({
-      query: (contactData) => (
-        console.log(contactData),
-        {
-          url: "users",
-          method: "POST",
-          body: contactData,
-        }
-      ),
+      query: (contactData) => ({
+        url: "users",
+        method: "POST",
+        body: contactData,
+      }),
     }),
   }),
 });

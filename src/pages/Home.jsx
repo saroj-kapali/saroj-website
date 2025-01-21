@@ -1,6 +1,7 @@
 import React from "react";
 import Slider from "./Slider";
 import Scroll from "./Scroll";
+import GetMockUsers from "./GetMockUsers";
 
 const Home = () => {
   return (

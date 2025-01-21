@@ -1,0 +1,14 @@
+/* Container to ensure components fit within screen */
+.container {
+  width: 100%;
+  max-width: 1200px; /* Max width if you want a fixed maximum */
+  margin-left: auto; /* Center the container */
+  margin-right: auto;
+}
+
+/* Make sure all components inside a container are responsive */
+.component {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}

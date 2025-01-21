@@ -1,57 +1,97 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
+  // State to toggle the mobile menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Function to toggle menu open/close
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <div className="flex justify-between items-center px-5 py-2">
-      <div className="flex gap-4 justify-center items-center">
-        {" "}
-        <div className="w-8 h-8 bg-sky-500 rounded-full"></div>
-        <div className="font-bold font-sans">SAROJ KAPALI</div>
-        <div className="text-[10px] text-neutral-500">
-          Data Science & React Developer
+    <nav className="bg-gray-100 p-4">
+      <div className="max-w-full mx-auto flex justify-between items-center">
+        <div className="w-20 sm:w-24 ">
+          <img className="w-full object-contain" src="logoPng.png" alt="" />
+        </div>
+        {/* Hamburger menu for mobile */}
+        <div className="sm:hidden" onClick={toggleMenu}>
+          <div className="w-6 hamburgermenu">
+            <img className="w-full object-contain " src="menu.png" alt="" />
+          </div>
+        </div>
+        {/* Desktop menu */}
+        <ul className="sm:flex hidden space-x-6">
+          <li>
+            <NavLink to={"/"} className=" hover:text-gray-400">
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to={"/about"} className=" hover:text-gray-400">
+              About
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to={"/service"} className=" hover:text-gray-400">
+              Services
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to={"/contact"} className=" hover:text-gray-400">
+              Contact
+            </NavLink>
+          </li>
+        </ul>
+        {/* Mobile menu */}
+        <div
+          className={`fixed top-0 right-0 w-1/2  shadow-lg bg-gray-800  h-full transform ${
+            isMenuOpen ? "translate-x-0" : "translate-x-full"
+          } transition-transform duration-500 ease-in-out`}
+        >
+          <ul className="flex flex-col items-center mt-20">
+            <li className="py-4">
+              <NavLink
+                to={"/"}
+                className="text-white hover:text-gray-400"
+                onClick={toggleMenu}
+              >
+                Home
+              </NavLink>
+            </li>
+            <li className="py-4">
+              <NavLink
+                to={"/about"}
+                className="text-white hover:text-gray-400"
+                onClick={toggleMenu}
+              >
+                About
+              </NavLink>
+            </li>
+            <li className="py-4">
+              <NavLink
+                to={"/service"}
+                className="text-white hover:text-gray-400"
+                onClick={toggleMenu}
+              >
+                Services
+              </NavLink>
+            </li>
+            <li className="py-4">
+              <NavLink
+                to={"/contact"}
+                className="text-white hover:text-gray-400"
+                onClick={toggleMenu}
+              >
+                Contact
+              </NavLink>
+            </li>
+          </ul>
         </div>
       </div>
-      <div>
-        <ul className="flex gap-2 text-gray-500">
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? "nav_link text-red-600 underline" : ""
-            }
-            to={"/"}
-          >
-            <li>Home</li>
-          </NavLink>
-          <li>|</li>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? "text-red-600 underline" : ""
-            }
-            to={"/about"}
-          >
-            <li>About Me</li>
-          </NavLink>
-          <li>|</li>
-          <NavLink
-            to={"/contact"}
-            className={({ isActive }) =>
-              isActive ? "text-red-600 underline" : ""
-            }
-          >
-            <li>Contact</li>
-          </NavLink>
-          <li>|</li>
-          <NavLink
-            to={"/gallery"}
-            className={({ isActive }) =>
-              isActive ? "text-red-600 underline" : ""
-            }
-          >
-            <li>Gallery</li>
-          </NavLink>
-        </ul>
-      </div>
-    </div>
+    </nav>
   );
 };
 
